@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { motion } from "framer-motion";
 import "./index.css";
 
 function App() {
@@ -6,49 +7,18 @@ function App() {
     { english: "book", uzbek: "kitob" },
     { english: "home", uzbek: "uy" },
     { english: "sleep", uzbek: "uxlamoq" },
-    { english: "book", uzbek: "kitob" },
-    { english: "home", uzbek: "uy" },
-    { english: "sleep", uzbek: "uxlamoq" },
-    { english: "book", uzbek: "kitob" },
-    { english: "home", uzbek: "uy" },
-    { english: "sleep", uzbek: "uxlamoq" },
-    { english: "book", uzbek: "kitob" },
-    { english: "home", uzbek: "uy" },
-    { english: "sleep", uzbek: "uxlamoq" },
-    { english: "book", uzbek: "kitob" },
-    { english: "home", uzbek: "uy" },
-    { english: "sleep", uzbek: "uxlamoq" },
-    { english: "book", uzbek: "kitob" },
-    { english: "home", uzbek: "uy" },
-    { english: "sleep", uzbek: "uxlamoq" },
-    { english: "book", uzbek: "kitob" },
-    { english: "home", uzbek: "uy" },
-    { english: "sleep", uzbek: "uxlamoq" },
-    { english: "book", uzbek: "kitob" },
-    { english: "home", uzbek: "uy" },
-    { english: "sleep", uzbek: "uxlamoq" },
-    { english: "book", uzbek: "kitob" },
-    { english: "home", uzbek: "uy" },
-    { english: "sleep", uzbek: "uxlamoq" },
   ]);
-  
   const [practicing, setPracticing] = useState([]);
   const [learned, setLearned] = useState([]);
   const [showTranslation, setShowTranslation] = useState(null);
 
-  const handleSwipeLeft = (index) => {
-    setPracticing([...practicing, words[index]]);
+  const handleSwipe = (index, direction) => {
+    if (direction === "left") {
+      setPracticing([...practicing, words[index]]);
+    } else if (direction === "right") {
+      setLearned([...learned, words[index]]);
+    }
     setWords(words.filter((_, i) => i !== index));
-  };
-
-  const handleSwipeRight = (index) => {
-    setLearned([...learned, words[index]]);
-    setWords(words.filter((_, i) => i !== index));
-  };
-
-  const handleDoubleClick = (index) => {
-    setShowTranslation(index);
-    setTimeout(() => setShowTranslation(null), 2000); // Tarjimani 2 soniyadan keyin yopadi
   };
 
   return (
@@ -56,24 +26,25 @@ function App() {
       <h1 className="text-3xl font-bold text-center mb-5">Flashcard App</h1>
       <div className="flex flex-wrap justify-center gap-5">
         {words.map((word, index) => (
-          <div
+          <motion.div
             key={index}
             className="bg-white shadow-lg rounded-lg p-4 w-48 text-center cursor-pointer hover:shadow-xl transition"
-            onDoubleClick={() => handleDoubleClick(index)}
-            onDragEnd={(e) => {
-              if (e.clientX < window.innerWidth / 2) {
-                handleSwipeLeft(index);
-              } else {
-                handleSwipeRight(index);
-              }
+            drag="x"
+            dragConstraints={{ left: 0, right: 0 }}
+            onDragEnd={(event, info) => {
+              if (info.offset.x < -100) handleSwipe(index, "left"); // Chapga
+              if (info.offset.x > 100) handleSwipe(index, "right"); // O‘ngga
             }}
-            draggable
+            onDoubleClick={() => {
+              setShowTranslation(index);
+              setTimeout(() => setShowTranslation(null), 2000);
+            }}
           >
             <h2 className="text-xl font-semibold">{word.english}</h2>
             {showTranslation === index && (
               <p className="text-gray-500 mt-2">{word.uzbek}</p>
             )}
-          </div>
+          </motion.div>
         ))}
       </div>
       <div className="mt-8">
