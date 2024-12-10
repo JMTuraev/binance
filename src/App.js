@@ -52,18 +52,29 @@ function App() {
       )}
       {/* Tugmalar paneli */}
       <div className="fixed bottom-5 left-1/2 transform -translate-x-1/2 flex gap-4">
-        <button
-          onClick={handleDontKnow}
-          className="bg-red-500 text-white px-6 py-3 rounded-lg hover:bg-red-600 transition"
-        >
-          Bilmayman
-        </button>
-        <button
-          onClick={handleKnow}
-          className="bg-green-500 text-white px-6 py-3 rounded-lg hover:bg-green-600 transition"
-        >
-          Bilaman
-        </button>
+        <div className="relative">
+          <button
+            onClick={handleDontKnow}
+            className="bg-red-500 text-white px-6 py-3 rounded-lg hover:bg-red-600 transition"
+          >
+            Bilmayman
+          </button>
+          <span className="absolute top-0 right-0 bg-red-600 text-white text-xs px-2 py-1 rounded-full">
+            {practicing.length}
+          </span>
+        </div>
+
+        <div className="relative">
+          <button
+            onClick={handleKnow}
+            className="bg-green-500 text-white px-6 py-3 rounded-lg hover:bg-green-600 transition"
+          >
+            Bilaman
+          </button>
+          <span className="absolute top-0 right-0 bg-green-600 text-white text-xs px-2 py-1 rounded-full">
+            {learned.length}
+          </span>
+        </div>
       </div>
 
       <div className="mt-8">
