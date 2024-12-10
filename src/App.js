@@ -32,7 +32,7 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 text-gray-900 flex flex-col items-center p-5">
+    <div className="min-h-screen bg-gray-100 text-gray-900 flex flex-col items-center p-5 pb-20">
       <h1 className="text-3xl font-bold text-center mb-5">Flashcard App</h1>
       {currentIndex < words.length && (
         <div className="bg-white shadow-lg rounded-lg p-6 w-64 text-center">
@@ -50,7 +50,8 @@ function App() {
           </button>
         </div>
       )}
-      <div className="flex gap-4 mt-6">
+      {/* Tugmalar paneli */}
+      <div className="fixed bottom-5 left-1/2 transform -translate-x-1/2 flex gap-4">
         <button
           onClick={handleDontKnow}
           className="bg-red-500 text-white px-6 py-3 rounded-lg hover:bg-red-600 transition"
@@ -64,6 +65,7 @@ function App() {
           Bilaman
         </button>
       </div>
+
       <div className="mt-8">
         <div>
           <h3 className="text-lg font-semibold">Yodlanmagan so'zlar:</h3>
