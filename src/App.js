@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { motion } from "framer-motion";
 import "./index.css";
 
 function App() {
@@ -10,42 +9,60 @@ function App() {
   ]);
   const [practicing, setPracticing] = useState([]);
   const [learned, setLearned] = useState([]);
-  const [showTranslation, setShowTranslation] = useState(null);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [showTranslation, setShowTranslation] = useState(false);
 
-  const handleSwipe = (index, direction) => {
-    if (direction === "left") {
-      setPracticing([...practicing, words[index]]);
-    } else if (direction === "right") {
-      setLearned([...learned, words[index]]);
+  const handleKnow = () => {
+    setLearned([...learned, words[currentIndex]]);
+    goToNextWord();
+  };
+
+  const handleDontKnow = () => {
+    setPracticing([...practicing, words[currentIndex]]);
+    goToNextWord();
+  };
+
+  const goToNextWord = () => {
+    if (currentIndex < words.length - 1) {
+      setCurrentIndex(currentIndex + 1);
+      setShowTranslation(false);
+    } else {
+      alert("Barcha kartalar tugadi!");
     }
-    setWords(words.filter((_, i) => i !== index));
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 text-gray-900 p-5">
+    <div className="min-h-screen bg-gray-100 text-gray-900 flex flex-col items-center p-5">
       <h1 className="text-3xl font-bold text-center mb-5">Flashcard App</h1>
-      <div className="flex flex-wrap justify-center gap-5">
-        {words.map((word, index) => (
-          <motion.div
-            key={index}
-            className="bg-white shadow-lg rounded-lg p-4 w-48 text-center cursor-pointer hover:shadow-xl transition"
-            drag="x"
-            dragConstraints={{ left: 0, right: 0 }}
-            onDragEnd={(event, info) => {
-              if (info.offset.x < -100) handleSwipe(index, "left"); // Chapga
-              if (info.offset.x > 100) handleSwipe(index, "right"); // O‘ngga
-            }}
-            onDoubleClick={() => {
-              setShowTranslation(index);
-              setTimeout(() => setShowTranslation(null), 2000);
-            }}
+      {currentIndex < words.length && (
+        <div className="bg-white shadow-lg rounded-lg p-6 w-64 text-center">
+          <h2 className="text-2xl font-semibold">
+            {words[currentIndex].english}
+          </h2>
+          {showTranslation && (
+            <p className="text-gray-500 mt-3">{words[currentIndex].uzbek}</p>
+          )}
+          <button
+            onClick={() => setShowTranslation(!showTranslation)}
+            className="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition"
           >
-            <h2 className="text-xl font-semibold">{word.english}</h2>
-            {showTranslation === index && (
-              <p className="text-gray-500 mt-2">{word.uzbek}</p>
-            )}
-          </motion.div>
-        ))}
+            Tarjimani ko'rsat
+          </button>
+        </div>
+      )}
+      <div className="flex gap-4 mt-6">
+        <button
+          onClick={handleDontKnow}
+          className="bg-red-500 text-white px-6 py-3 rounded-lg hover:bg-red-600 transition"
+        >
+          Bilmayman
+        </button>
+        <button
+          onClick={handleKnow}
+          className="bg-green-500 text-white px-6 py-3 rounded-lg hover:bg-green-600 transition"
+        >
+          Bilaman
+        </button>
       </div>
       <div className="mt-8">
         <div>
